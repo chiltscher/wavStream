@@ -26,6 +26,7 @@ audioBuffer = 1024;
 
 #setup udp Socket
 udpSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM);
+udpSocket.sendto("nf", (ip, port));
 
 #setup pyaudio stream to soundcard
 wavFile = wave.open(PATH, 'rb');
@@ -33,6 +34,8 @@ samples = wavFile.readframes(audioBuffer);
 while (len(samples) > 0):
     udpSocket.sendto(samples, (ip, port));
     samples = wavFile.readframes(audioBuffer);
+
+udpSocket.sendto("eof", (ip, port));
 
 wavFile.close();
 udpSocket.close();

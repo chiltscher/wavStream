@@ -12,7 +12,7 @@ import pyaudio;
 eol = os.linesep;
 
 #setup variables
-ip = "localhost";
+ip = socket.gethostname();
 port = 5000;
 audioBuffer = 1024;
 samples = [];
@@ -35,31 +35,23 @@ print("Output device: "+device["name"]);
 print(str(channels)+" channels");
 print(str(sampleRate)+" Hz");
 
-stream = audio.open(format=audioFormat,
-                    channels=channels,
-                    rate=sampleRate,
-                    output=True,
-                    frames_per_buffer=audioBuffer);
-
 def playIt():
+
+    stream = audio.open(format=audioFormat,
+                        channels=channels,
+                        rate=sampleRate,
+                        output=True,
+                        frames_per_buffer=audioBuffer);
+
     stream.write(data, audioBuffer);
     udpSocket.close();
     stream.stop_stream();
     stream.close();
 
-count = 0
+
+
 
 while True:
-    data, addr = udpSocket.recvfrom(audioBuffer*4);
+    data, addr = udpSocket.recvfrom(audioBuffer * channels * samplingWidth);
     if data:
-        print("reciving"+str(count))
-        count +=1
-        ready = False;
-        samples.append(data);
-
-        ready = True;
-        continue;
-
-    if ready == True:
-        print("Finally playing")
-        playIt();
+        print("Here we go");
